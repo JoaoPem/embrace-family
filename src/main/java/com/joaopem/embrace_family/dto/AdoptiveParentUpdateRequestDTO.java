@@ -4,8 +4,9 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
-public record RequestUserDTO(
+public record AdoptiveParentUpdateRequestDTO(
 
         @NotBlank(message = "required field")
         String fullName,
@@ -14,20 +15,9 @@ public record RequestUserDTO(
         @NotNull(message = "Campo obrigatório")
         LocalDate birthDate,
 
-        @Email(message = "Invalid Email")
-        @NotBlank(message = "required field")
-        String email,
-
         @Pattern(regexp = "^\\+55\\d{2}\\d{9}$", message = "Invalid Phone Number")
         @NotBlank(message = "required field")
         String phone,
-
-        @Pattern(
-                regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]|:;\"'<>,.?/]).{8,}$",
-                message = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
-        )
-        @NotBlank(message = "required field")
-        String password,
 
         @NotBlank(message = "required field")
         String nationality,

@@ -3,13 +3,11 @@ package com.joaopem.embrace_family.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record ResponseUserDTO(
+public record AdoptiveParentResponseDTO(
 
         String fullName,
 
         LocalDate birthDate,
-
-        String email,
 
         String phone,
 

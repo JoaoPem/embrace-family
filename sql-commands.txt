@@ -1,19 +1,30 @@
-CREATE TABLE "user"(
+CREATE TABLE user_accounts (
     id UUID PRIMARY KEY NOT NULL,
-    full_name VARCHAR(100) NOT NULL,
-    birth_date DATE NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    phone VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(300) NOT NULL,
-    nationality VARCHAR(30) NOT NULL,
-    marital_status VARCHAR(20) NOT NULL,
-    gender_identify VARCHAR(20) NOT NULL,
-    sexual_orientation VARCHAR(20) NOT NULL,
-    education_level VARCHAR(30) NOT NULL,
-    occupation VARCHAR(50) NOT NULL,
-    monthly_income NUMERIC(10,2) NOT NULL,
-    hobbies VARCHAR(1000) NOT NULL,
-    religion VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    role VARCHAR(20) NOT NULL
+    CONSTRAINT chk_role CHECK (role IN ('ADOPTIVE_PARENT', 'BIRTH_PARENT', 'ADMIN'))
 );
+
+CREATE TABLE adoptive_parents(
+    id UUID PRIMARY KEY,
+    user_account_id UUID UNIQUE,
+    full_name VARCHAR(100),
+    birth_date DATE,
+    phone VARCHAR(20) UNIQUE,
+    nationality VARCHAR(30),
+    marital_status VARCHAR(20),
+    gender_identify VARCHAR(20),
+    sexual_orientation VARCHAR(20),
+    education_level VARCHAR(30),
+    occupation VARCHAR(50),
+    monthly_income NUMERIC(10,2),
+    hobbies VARCHAR(1000),
+    religion VARCHAR(20),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_user_account FOREIGN KEY (user_account_id) REFERENCES user_accounts(id)
+);
+
+
+

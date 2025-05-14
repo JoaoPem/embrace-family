@@ -2,6 +2,7 @@ package com.joaopem.embrace_family.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,15 +13,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "adoptive_parents")
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class AdoptiveParent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
+
+    @OneToOne
+    @JoinColumn(name = "user_account_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private UserAccount userAccount;
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
@@ -28,14 +34,8 @@ public class User {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "email", nullable = false, length = 100 )
-    private String email;
-
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone", nullable = false, length = 20, unique = true)
     private String phone;
-
-    @Column(name = "password", nullable = false, length = 300)
-    private String password;
 
     @Column(name = "nationality", nullable = false, length = 30 )
     private String nationality;
