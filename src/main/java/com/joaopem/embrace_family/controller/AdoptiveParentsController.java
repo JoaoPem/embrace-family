@@ -2,6 +2,7 @@ package com.joaopem.embrace_family.controller;
 
 import com.joaopem.embrace_family.dto.AdoptiveParentResponseDTO;
 import com.joaopem.embrace_family.dto.AdoptiveParentUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.UserAccountResponseDTO;
 import com.joaopem.embrace_family.mappers.AdoptiveParentMapper;
 import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.service.AdoptiveParentService;
@@ -25,11 +26,17 @@ public class AdoptiveParentsController {
     private final AdoptiveParentService adoptiveParentService;
     private final AdoptiveParentMapper adoptiveParentMapper;
 
-    @PutMapping("{uuid}")
-    public ResponseEntity<Void> updateAdoptiveParent(@PathVariable UUID uuid, @RequestBody @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
-        adoptiveParentService.updateAdoptiveParent(uuid, adoptiveParentUpdateRequestDTO);
+    @PutMapping("/update-me")
+    public ResponseEntity<Void> updateAdoptiveParent(@RequestBody @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
+        adoptiveParentService.updateAdoptiveParent(adoptiveParentUpdateRequestDTO);
         return ResponseEntity.noContent().build();
     }
+
+   @GetMapping("/show-me")
+    public ResponseEntity<AdoptiveParentResponseDTO> getAdoptiveParentDetails(){
+       AdoptiveParentResponseDTO adoptiveParentResponseDTO = adoptiveParentService.getAdoptiveParentDetails();
+        return ResponseEntity.ok(adoptiveParentResponseDTO);
+   }
 
 //    @GetMapping("{uuid}")
 //    public ResponseEntity<AdoptiveParentResponseDTO> getAdoptiveParentDetails(@PathVariable UUID uuid){
@@ -41,13 +48,5 @@ public class AdoptiveParentsController {
 //        ).orElseGet(() -> ResponseEntity.notFound().build());
 //    }
 
-    @GetMapping
-    public ResponseEntity<List<AdoptiveParentResponseDTO>> getAllAdoptiveParents(){
-        List<AdoptiveParent> adoptiveParentList = adoptiveParentService.getAllAdoptiveParents();
-        List<AdoptiveParentResponseDTO> adoptiveParentDTOList = adoptiveParentList.stream()
-                .map(adoptiveParentMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(adoptiveParentDTOList);
-    }
 }
 

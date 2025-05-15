@@ -10,5 +10,5 @@ public interface AdoptiveParentRepository extends JpaRepository <AdoptiveParent,
 
     Optional<AdoptiveParent> findByPhone(String phone);
 
-    boolean existsByIdAndUserAccountId(UUID adoptiveParentId, UUID userAccountId);
+    Optional<AdoptiveParent> findByUserAccountId(UUID uuid);
 }

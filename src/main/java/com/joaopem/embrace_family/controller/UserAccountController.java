@@ -30,15 +30,22 @@ public class UserAccountController {
         userAccountService.saveUserAccount(userAccount);
     }
 
-    @PutMapping("/{uuid}")
-    public ResponseEntity<UserAccountResponseDTO> updateMyProfile(@PathVariable UUID uuid, @Valid @RequestBody UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
-        UserAccountResponseDTO userAccountResponseDTO = userAccountService.updateUserAccount(uuid, userAccountUpdateRequestDTO);
+    @PutMapping("/update-me")
+    public ResponseEntity<UserAccountResponseDTO> updateMyProfile(@Valid @RequestBody UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+        UserAccountResponseDTO userAccountResponseDTO = userAccountService.updateUserAccount(userAccountUpdateRequestDTO);
         return ResponseEntity.ok(userAccountResponseDTO);
     }
 
-    @DeleteMapping("{uuid}")
-    public void deleterUserAccount(@PathVariable UUID uuid){
-        userAccountService.deleteUserAccount(uuid);
+    @DeleteMapping("/delete-me")
+    public ResponseEntity<Void> deleterUserAccount(){
+        userAccountService.deleteUserAccount();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/show-me")
+    public ResponseEntity<UserAccountResponseDTO> getUserAccountDetails(){
+        UserAccountResponseDTO userAccountResponseDTO = userAccountService.getUserAccountDetails();
+        return ResponseEntity.ok(userAccountResponseDTO);
     }
 
 //    @PutMapping("{id}")
@@ -52,9 +59,9 @@ public class UserAccountController {
 //
 //    }
 
-    @GetMapping
-    public ResponseEntity<List<UserAccountResponseDTO>> getAllUsersAccounts(){
-        return ResponseEntity.ok(userAccountService.getAllUserAccounts());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<UserAccountResponseDTO>> getAllUsersAccounts(){
+//        return ResponseEntity.ok(userAccountService.getAllUserAccounts());
+//    }
 
 }

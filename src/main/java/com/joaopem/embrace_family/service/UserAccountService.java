@@ -48,9 +48,9 @@ public class UserAccountService {
         userAccount.setAdoptiveParent(adoptiveParent);
     }
 
-    public UserAccountResponseDTO updateUserAccount(UUID uuid, UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
-        verifyOwnership(uuid);
-        UserAccount userAccount = userAccountRepository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public UserAccountResponseDTO updateUserAccount(UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+        UserAccount userAccount = securityService.getLoggedInUser();
+
         if (userAccountUpdateRequestDTO.email() != null){
             userAccount.setEmail(userAccountUpdateRequestDTO.email());
         }
@@ -66,30 +66,33 @@ public class UserAccountService {
         return userAccountMapper.toDTO(userAccount);
     }
 
-    public void deleteUserAccount(UUID uuid){
-        verifyOwnership(uuid);
-        UserAccount userAccount = userAccountRepository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public void deleteUserAccount(){
+        UserAccount userAccount = securityService.getLoggedInUser();
         userAccountRepository.delete(userAccount);
     }
 
-    private void verifyOwnership(UUID uuid){
+    public UserAccountResponseDTO getUserAccountDetails(){
         UserAccount userAccount = securityService.getLoggedInUser();
-        if (userAccount == null || !userAccount.getId().equals(uuid)){
-            throw new AccessDeniedException("You can only modify your own profile.");
-        }
-    }
-
-    public List<UserAccountResponseDTO> getAllUserAccounts(){
-        List<UserAccount> userAccountList = userAccountRepository.findAll();
-        return userAccountList.stream().map(userAccountMapper::toDTO).collect(Collectors.toList());
-    }
-
-    public Optional<UserAccount> getById(UUID uuid) {
-        return userAccountRepository.findById(uuid);
+        return userAccountMapper.toDTO(userAccount);
     }
 
     public UserAccount getByEmail(String email){
         return userAccountRepository.findByEmail(email);
     }
+
+//    private void verifyOwnership(UUID uuid){
+//        UserAccount userAccount = securityService.getLoggedInUser();
+//        if (userAccount == null || !userAccount.getId().equals(uuid)){
+//            throw new AccessDeniedException("You can only modify your own profile.");
+//        }
+//    }
+
+//    public List<UserAccountResponseDTO> getAllUserAccounts(){
+//        List<UserAccount> userAccountList = userAccountRepository.findAll();
+//        return userAccountList.stream().map(userAccountMapper::toDTO).collect(Collectors.toList());
+//    }
+
+
+
 
 }
