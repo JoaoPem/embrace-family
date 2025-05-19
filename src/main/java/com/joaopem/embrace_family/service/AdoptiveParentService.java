@@ -10,10 +10,11 @@ import com.joaopem.embrace_family.security.SecurityService;
 import com.joaopem.embrace_family.validator.AdoptiveParentValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
+import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +24,20 @@ public class AdoptiveParentService {
     private final AdoptiveParentMapper adoptiveParentMapper;
     private final AdoptiveParentValidator adoptiveParentValidator;
     private final SecurityService securityService;
+    private final ImageService imageService;
 
-    public void updateAdoptiveParent(AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
+    public void updateAdoptiveParent(AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO, List<MultipartFile> files) throws IOException {
         UserAccount userAccount = securityService.getLoggedInUser();
-        AdoptiveParent adoptiveParent = adoptiveParentRepository.findByUserAccountId(userAccount.getId()).orElseThrow(() -> new EntityNotFoundException("AdoptiveParent not found"));
+        AdoptiveParent adoptiveParent = adoptiveParentRepository.findByUserAccountId(userAccount.getId())
+                .orElseThrow(() -> new EntityNotFoundException("AdoptiveParent not found"));
+
         adoptiveParentMapper.updateFromDTO(adoptiveParent, adoptiveParentUpdateRequestDTO);
         adoptiveParentValidator.validateAdoptiveParent(adoptiveParent);
+
+        if (files != null && !files.isEmpty()) {
+            imageService.saveImagesForAdoptiveParent(adoptiveParent, files);
+        }
+
         adoptiveParentRepository.save(adoptiveParent);
     }
 

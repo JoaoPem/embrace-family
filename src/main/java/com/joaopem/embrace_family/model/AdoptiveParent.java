@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,6 +29,9 @@ public class AdoptiveParent {
     @JoinColumn(name = "user_account_id", referencedColumnName = "id")
     @ToString.Exclude
     private UserAccount userAccount;
+
+    @OneToMany(mappedBy = "adoptiveParent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;

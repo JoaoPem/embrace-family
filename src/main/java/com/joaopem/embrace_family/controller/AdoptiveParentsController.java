@@ -2,20 +2,18 @@ package com.joaopem.embrace_family.controller;
 
 import com.joaopem.embrace_family.dto.AdoptiveParentResponseDTO;
 import com.joaopem.embrace_family.dto.AdoptiveParentUpdateRequestDTO;
-import com.joaopem.embrace_family.dto.UserAccountResponseDTO;
 import com.joaopem.embrace_family.mappers.AdoptiveParentMapper;
-import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.service.AdoptiveParentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.AccessDeniedException;
+import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/adoptive-parents")
@@ -26,9 +24,12 @@ public class AdoptiveParentsController {
     private final AdoptiveParentService adoptiveParentService;
     private final AdoptiveParentMapper adoptiveParentMapper;
 
-    @PutMapping("/update-me")
-    public ResponseEntity<Void> updateAdoptiveParent(@RequestBody @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
-        adoptiveParentService.updateAdoptiveParent(adoptiveParentUpdateRequestDTO);
+    @PutMapping(value = "/update-me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateAdoptiveParent(
+            @RequestPart("data") @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
+            ) throws IOException {
+        adoptiveParentService.updateAdoptiveParent(adoptiveParentUpdateRequestDTO, files);
         return ResponseEntity.noContent().build();
     }
 

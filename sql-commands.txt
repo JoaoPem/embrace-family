@@ -26,5 +26,12 @@ CREATE TABLE adoptive_parents(
     CONSTRAINT fk_user_account FOREIGN KEY (user_account_id) REFERENCES user_accounts(id)
 );
 
-
+CREATE TABLE images(
+    id UUID PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    adoptive_parent_id UUID,
+    CONSTRAINT fk_adoptive_parent FOREIGN KEY (adoptive_parent_id) REFERENCES adoptive_parents(id)
+);
 
