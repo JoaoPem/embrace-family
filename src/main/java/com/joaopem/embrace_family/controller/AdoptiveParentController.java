@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/adoptive-parents")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADOPTIVE_PARENT')")
-public class AdoptiveParentsController {
+public class AdoptiveParentController {
 
     private final AdoptiveParentService adoptiveParentService;
     private final AdoptiveParentMapper adoptiveParentMapper;

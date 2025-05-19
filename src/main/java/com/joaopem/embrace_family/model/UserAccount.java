@@ -1,5 +1,6 @@
 package com.joaopem.embrace_family.model;
 
+import com.joaopem.embrace_family.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 

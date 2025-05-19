@@ -2,7 +2,7 @@ package com.joaopem.embrace_family.validator;
 
 import com.joaopem.embrace_family.exceptions.DuplicateRecordException;
 import com.joaopem.embrace_family.model.UserAccount;
-import com.joaopem.embrace_family.model.UserRole;
+import com.joaopem.embrace_family.enums.UserRole;
 import com.joaopem.embrace_family.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

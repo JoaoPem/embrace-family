@@ -24,4 +24,8 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adoptive_parent_id")
     private AdoptiveParent adoptiveParent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_id")
+    private Family family;
 }

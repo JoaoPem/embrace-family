@@ -32,6 +32,23 @@ CREATE TABLE images(
     path VARCHAR(255) NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adoptive_parent_id UUID,
-    CONSTRAINT fk_adoptive_parent FOREIGN KEY (adoptive_parent_id) REFERENCES adoptive_parents(id)
+    family_id UUID,
+
+    CONSTRAINT fk_adoptive_parent FOREIGN KEY (adoptive_parent_id) REFERENCES adoptive_parents(id),
+    CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES families(id)
 );
 
+CREATE TABLE families(
+    id UUID PRIMARY KEY,
+    adoptive_parent1_id UUID UNIQUE NOT NULL,
+    adoptive_parent2_id UUID UNIQUE,
+    family_name VARCHAR(50) NOT NULL,
+    description VARCHAR(2000),
+    family_culture VARCHAR(1000),
+    religious_traditions VARCHAR(1000),
+    shared_hobbies VARCHAR(1000),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_adoptive_parent1 FOREIGN KEY (adoptive_parent1_id) REFERENCES adoptive_parents(id),
+    CONSTRAINT fk_adoptive_parent2 FOREIGN KEY (adoptive_parent2_id) REFERENCES adoptive_parents(id)
+);

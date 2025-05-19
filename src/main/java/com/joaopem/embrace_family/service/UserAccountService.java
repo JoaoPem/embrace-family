@@ -2,25 +2,16 @@ package com.joaopem.embrace_family.service;
 
 import com.joaopem.embrace_family.dto.UserAccountResponseDTO;
 import com.joaopem.embrace_family.dto.UserAccountUpdateRequestDTO;
-import com.joaopem.embrace_family.exceptions.PasswordConfirmationException;
 import com.joaopem.embrace_family.mappers.UserAccountMapper;
 import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.model.UserAccount;
-import com.joaopem.embrace_family.model.UserRole;
+import com.joaopem.embrace_family.enums.UserRole;
 import com.joaopem.embrace_family.repository.UserAccountRepository;
 import com.joaopem.embrace_family.security.SecurityService;
 import com.joaopem.embrace_family.validator.UserAccountValidator;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

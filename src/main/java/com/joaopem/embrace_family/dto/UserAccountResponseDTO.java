@@ -1,6 +1,6 @@
 package com.joaopem.embrace_family.dto;
 
-import com.joaopem.embrace_family.model.UserRole;
+import com.joaopem.embrace_family.enums.UserRole;
 
 import java.util.UUID;
 
