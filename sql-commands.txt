@@ -2,7 +2,7 @@ CREATE TABLE user_accounts (
     id UUID PRIMARY KEY NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(300) NOT NULL,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
     CONSTRAINT chk_role CHECK (role IN ('ADOPTIVE_PARENT', 'BIRTH_PARENT', 'ADMIN'))
 );
 
@@ -51,4 +51,18 @@ CREATE TABLE families(
     updated_at TIMESTAMP,
     CONSTRAINT fk_adoptive_parent1 FOREIGN KEY (adoptive_parent1_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_adoptive_parent2 FOREIGN KEY (adoptive_parent2_id) REFERENCES adoptive_parents(id)
+);
+
+CREATE TABLE family_invitations(
+    id UUID PRIMARY KEY,
+    invited_adoptive_parent_id UUID NOT NULL,
+    inviter_adoptive_parent_id UUID NOT NULL,
+    family_id UUID NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_invited_adoptive_parent FOREIGN KEY (invited_adoptive_parent_id) REFERENCES adoptive_parents(id),
+    CONSTRAINT fk_inviter_adoptive_parent FOREIGN KEY (inviter_adoptive_parent_id) REFERENCES adoptive_parents(id),
+    CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES families(id),
+    CONSTRAINT unique_family_invite UNIQUE (invited_adoptive_parent_id, family_id)
 );

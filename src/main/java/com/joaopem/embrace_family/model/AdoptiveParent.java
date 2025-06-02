@@ -26,12 +26,15 @@ public class AdoptiveParent {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "user_account_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_account_id", nullable = false)
     @ToString.Exclude
     private UserAccount userAccount;
 
-    @OneToMany(mappedBy = "adoptiveParent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "adoptiveParent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    @OneToOne(mappedBy = "adoptiveParent1", fetch = FetchType.EAGER)
+    private Family family;
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;

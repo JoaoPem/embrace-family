@@ -1,17 +1,23 @@
 package com.joaopem.embrace_family.service;
 
-import com.joaopem.embrace_family.dto.UserAccountResponseDTO;
-import com.joaopem.embrace_family.dto.UserAccountUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountPostRequestDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountResponseDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountUpdateRequestDTO;
+import com.joaopem.embrace_family.enums.UserRole;
 import com.joaopem.embrace_family.mappers.UserAccountMapper;
 import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.model.UserAccount;
-import com.joaopem.embrace_family.enums.UserRole;
 import com.joaopem.embrace_family.repository.UserAccountRepository;
 import com.joaopem.embrace_family.security.SecurityService;
 import com.joaopem.embrace_family.validator.UserAccountValidator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,43 +29,57 @@ public class UserAccountService {
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
 
-    public void saveUserAccount(UserAccount userAccount){
+    public UserAccountResponseDTO createUserAccount(UserAccountPostRequestDTO userAccountPostRequestDTO){
+        UserAccount userAccount = userAccountMapper.toEntity(userAccountPostRequestDTO);
         userAccount.setEmail(userAccount.getEmail().toLowerCase());
-        userAccount.setUserRole(UserRole.ADOPTIVE_PARENT);
         userAccountValidator.validateUserAccount(userAccount);
-        var password = userAccount.getPassword();
+        userAccount.setUserRole(UserRole.ADOPTIVE_PARENT);
+        var password =  userAccount.getPassword();
         userAccount.setPassword(passwordEncoder.encode(password));
         createAdoptiveParent(userAccount);
         userAccountRepository.save(userAccount);
+        return userAccountMapper.toDTO(userAccount);
     }
 
-    private static void createAdoptiveParent(UserAccount userAccount) {
+    private void createAdoptiveParent(UserAccount userAccount) {
         AdoptiveParent adoptiveParent = new AdoptiveParent();
         adoptiveParent.setUserAccount(userAccount);
         userAccount.setAdoptiveParent(adoptiveParent);
     }
 
-    public UserAccountResponseDTO updateUserAccount(UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+    public  UserAccountResponseDTO updateOwnUserAccount(UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
         UserAccount userAccount = securityService.getLoggedInUser();
 
-        if (userAccountUpdateRequestDTO.email() != null){
-            userAccount.setEmail(userAccountUpdateRequestDTO.email());
-        }
-        if (userAccountUpdateRequestDTO.password() != null && !userAccountUpdateRequestDTO.password().isBlank()){
-            if (!userAccountUpdateRequestDTO.password().equals(userAccountUpdateRequestDTO.passwordConfirmation())){
-                //throw new PasswordConfirmationException("Password confirmation does not match or is missing.");
-                throw new IllegalArgumentException("Password confirmation does not match or is missing.");
-            }
-            userAccount.setPassword(passwordEncoder.encode(userAccountUpdateRequestDTO.password()));
-        }
-        userAccountValidator.validateUserAccount(userAccount);
+        updateEmailIfPresent(userAccount, userAccountUpdateRequestDTO);
+        updatePasswordIfPresent(userAccount, userAccountUpdateRequestDTO);
+
         userAccountRepository.save(userAccount);
         return userAccountMapper.toDTO(userAccount);
     }
 
-    public void deleteUserAccount(){
-        UserAccount userAccount = securityService.getLoggedInUser();
-        userAccountRepository.delete(userAccount);
+    private void updateEmailIfPresent(UserAccount userAccount, UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+        if (userAccountUpdateRequestDTO.email() != null && !userAccountUpdateRequestDTO.email().isBlank()){
+            userAccount.setEmail(userAccountUpdateRequestDTO.email());
+            userAccountValidator.validateUserAccount(userAccount);
+        }
+    }
+
+    private void updatePasswordIfPresent(UserAccount userAccount, UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+        if (userAccountUpdateRequestDTO.password() != null && !userAccountUpdateRequestDTO.password().isBlank()){
+            if (userAccountUpdateRequestDTO.passwordConfirmation() == null || userAccountUpdateRequestDTO.passwordConfirmation().isBlank()){
+                throw new IllegalArgumentException("Password confirmation is required when changing password.");
+            }
+            if (!userAccountUpdateRequestDTO.password().equals(userAccountUpdateRequestDTO.passwordConfirmation())){
+                throw new IllegalArgumentException("Password confirmation does not match or is missing.");
+            }
+            var password = userAccountUpdateRequestDTO.password();
+            userAccount.setPassword(passwordEncoder.encode(password));
+        }
+    }
+
+    public void deleteOwnUserAccount(){
+        UserAccount loggedUser = securityService.getLoggedInUser();
+        userAccountRepository.delete(loggedUser);
     }
 
     public UserAccountResponseDTO getUserAccountDetails(){
@@ -67,23 +87,19 @@ public class UserAccountService {
         return userAccountMapper.toDTO(userAccount);
     }
 
+
+//    public UserAccountResponseDTO getUserAccountDetails(UserAccount userAccount){
+//        return userAccountMapper.toDTO(userAccount);
+//    }
+
+//    public UserAccountResponseDTO getUserAccountDetails(UUID uuid){
+//        UserAccount userAccount = userAccountRepository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("UserAccount not found"));
+//        return userAccountMapper.toDTO(userAccount);
+//    }
+
+
     public UserAccount getByEmail(String email){
-        return userAccountRepository.findByEmail(email);
+        return userAccountRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
-//    private void verifyOwnership(UUID uuid){
-//        UserAccount userAccount = securityService.getLoggedInUser();
-//        if (userAccount == null || !userAccount.getId().equals(uuid)){
-//            throw new AccessDeniedException("You can only modify your own profile.");
-//        }
-//    }
-
-//    public List<UserAccountResponseDTO> getAllUserAccounts(){
-//        List<UserAccount> userAccountList = userAccountRepository.findAll();
-//        return userAccountList.stream().map(userAccountMapper::toDTO).collect(Collectors.toList());
-//    }
-
-
-
 
 }

@@ -13,7 +13,7 @@ public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -26,7 +26,7 @@ public class UserAccount {
     @Column(name = "role", length = 20, nullable = false)
     private UserRole userRole;
 
-    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private AdoptiveParent adoptiveParent;
 
 }

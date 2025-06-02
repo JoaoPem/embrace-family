@@ -1,6 +1,7 @@
 package com.joaopem.embrace_family.config;
 
 import com.joaopem.embrace_family.security.LoginSocialSuccessHandler;
+import com.joaopem.embrace_family.security.RestAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,11 +21,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler loginSocialSuccessHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler loginSocialSuccessHandler, RestAuthenticationEntryPoint restAuthenticationEntryPoint) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.POST, "/users").permitAll();
                     authorize.anyRequest().authenticated();

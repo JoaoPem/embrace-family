@@ -1,8 +1,8 @@
 package com.joaopem.embrace_family.controller;
 
-import com.joaopem.embrace_family.dto.UserAccountPostRequestDTO;
-import com.joaopem.embrace_family.dto.UserAccountResponseDTO;
-import com.joaopem.embrace_family.dto.UserAccountUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountPostRequestDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountResponseDTO;
+import com.joaopem.embrace_family.dto.useraccount.UserAccountUpdateRequestDTO;
 import com.joaopem.embrace_family.mappers.UserAccountMapper;
 import com.joaopem.embrace_family.model.UserAccount;
 import com.joaopem.embrace_family.service.UserAccountService;
@@ -10,10 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -24,21 +22,20 @@ public class UserAccountController {
     private final UserAccountMapper userAccountMapper;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveUserAccount(@RequestBody @Valid UserAccountPostRequestDTO userAccountPostRequestDTO){
-        UserAccount userAccount = userAccountMapper.toEntity(userAccountPostRequestDTO);
-        userAccountService.saveUserAccount(userAccount);
+    public ResponseEntity<UserAccountResponseDTO> createUserAccount(@RequestBody @Valid UserAccountPostRequestDTO userAccountPostRequestDTO){
+        UserAccountResponseDTO createdUserAccountDTO = userAccountService.createUserAccount(userAccountPostRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserAccountDTO);
     }
 
-    @PutMapping("/update-me")
-    public ResponseEntity<UserAccountResponseDTO> updateMyProfile(@Valid @RequestBody UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
-        UserAccountResponseDTO userAccountResponseDTO = userAccountService.updateUserAccount(userAccountUpdateRequestDTO);
-        return ResponseEntity.ok(userAccountResponseDTO);
+    @PatchMapping("/update-me")
+    public ResponseEntity<UserAccountResponseDTO> updateOwnUserAccount(@RequestBody @Valid UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
+        UserAccountResponseDTO updatedUserAccountDTO = userAccountService.updateOwnUserAccount(userAccountUpdateRequestDTO);
+        return ResponseEntity.ok().body(updatedUserAccountDTO);
     }
 
     @DeleteMapping("/delete-me")
-    public ResponseEntity<Void> deleterUserAccount(){
-        userAccountService.deleteUserAccount();
+    public ResponseEntity<Void> deleteOwnUserAccount(){
+        userAccountService.deleteOwnUserAccount();
         return ResponseEntity.noContent().build();
     }
 
@@ -48,20 +45,11 @@ public class UserAccountController {
         return ResponseEntity.ok(userAccountResponseDTO);
     }
 
-//    @PutMapping("{id}")
-//    public ResponseEntity<Object> updateUserAccount(@PathVariable UUID id, @RequestBody @Valid UserAccountPostRequestDTO userAccountPostRequestDTO){
-//        return userAccountService.getById(id).map( userAccount -> {
-//            UserAccount userAccountEntity = userAccountMapper.toEntity(userAccountPostRequestDTO);
-//            userAccountEntity.setId(id);
-//            userAccountService.updateUserAccount(userAccountEntity);
-//            return ResponseEntity.noContent().build();
-//        }).orElseGet(() -> ResponseEntity.notFound().build());
-//
-//    }
 
-//    @GetMapping
-//    public ResponseEntity<List<UserAccountResponseDTO>> getAllUsersAccounts(){
-//        return ResponseEntity.ok(userAccountService.getAllUserAccounts());
+//    @GetMapping("/show-me")
+//    public ResponseEntity<UserAccountResponseDTO> getUserAccountDetails(@AuthenticationPrincipal UserAccount userAccount){
+//        UserAccountResponseDTO userAccountResponseDTO = userAccountService.getUserAccountDetails(userAccount);
+//        return ResponseEntity.ok(userAccountResponseDTO);
 //    }
 
 }

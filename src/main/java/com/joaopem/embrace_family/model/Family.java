@@ -21,18 +21,18 @@ public class Family {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> familyPhotos = new ArrayList<>();
 
     @OneToOne
-    @JoinColumn(name = "adoptive_parent1_id", referencedColumnName = "id", unique = true,  nullable = false)
+    @JoinColumn(name = "adoptive_parent1_id", nullable = false, unique = true)
     private AdoptiveParent adoptiveParent1;
 
     @OneToOne
-    @JoinColumn(name = "adoptive_parent2_id", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "adoptive_parent2_id", unique = true)
     private AdoptiveParent adoptiveParent2;
 
-    @Column(name = "family_name", nullable = false, length = 2000)
+    @Column(name = "family_name", nullable = false, length = 50)
     private String familyName;
 
     @Column(name = "description", length = 2000)

@@ -1,4 +1,4 @@
-package com.joaopem.embrace_family.dto;
+package com.joaopem.embrace_family.dto.useraccount;
 
 import jakarta.validation.constraints.*;
 

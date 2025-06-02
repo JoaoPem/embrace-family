@@ -36,7 +36,7 @@ public class AdoptiveParentController {
    @GetMapping("/show-me")
     public ResponseEntity<AdoptiveParentResponseDTO> getAdoptiveParentDetails(){
        AdoptiveParentResponseDTO adoptiveParentResponseDTO = adoptiveParentService.getAdoptiveParentDetails();
-        return ResponseEntity.ok(adoptiveParentResponseDTO);
+       return ResponseEntity.ok(adoptiveParentResponseDTO);
    }
 
 //    @GetMapping("{uuid}")

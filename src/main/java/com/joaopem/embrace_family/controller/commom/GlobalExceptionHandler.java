@@ -59,6 +59,12 @@ public class GlobalExceptionHandler {
         return  new ResponseError(HttpStatus.BAD_REQUEST.value(),"Validation Failed", List.of(new FieldError("passwordConfirmation", e.getMessage())));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError handleIllegalStateException(IllegalStateException  e){
+        return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), List.of());
+    }
+
 //    @ExceptionHandler(RuntimeException.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    public ResponseError handleUnhandledErrors(RuntimeException e){
