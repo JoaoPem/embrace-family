@@ -51,6 +51,7 @@ CREATE TABLE families(
     updated_at TIMESTAMP,
     CONSTRAINT fk_adoptive_parent1 FOREIGN KEY (adoptive_parent1_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_adoptive_parent2 FOREIGN KEY (adoptive_parent2_id) REFERENCES adoptive_parents(id)
+    CONSTRAINT chk_parents_distinct CHECK (adoptive_parent1_id <> adoptive_parent2_id)
 );
 
 CREATE TABLE family_invitations(
@@ -64,5 +65,5 @@ CREATE TABLE family_invitations(
     CONSTRAINT fk_invited_adoptive_parent FOREIGN KEY (invited_adoptive_parent_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_inviter_adoptive_parent FOREIGN KEY (inviter_adoptive_parent_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES families(id),
-    CONSTRAINT unique_family_invite UNIQUE (invited_adoptive_parent_id, family_id)
+    CONSTRAINT unique_invitation UNIQUE (inviter_id, invitee_id, family_id)
 );

@@ -21,16 +21,16 @@ public class Family {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Image> familyPhotos = new ArrayList<>();
-
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "adoptive_parent1_id", nullable = false, unique = true)
     private AdoptiveParent adoptiveParent1;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "adoptive_parent2_id", unique = true)
     private AdoptiveParent adoptiveParent2;
+
+//    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    private List<Image> familyPhotos = new ArrayList<>();
 
     @Column(name = "family_name", nullable = false, length = 50)
     private String familyName;

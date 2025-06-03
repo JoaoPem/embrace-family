@@ -1,7 +1,7 @@
 package com.joaopem.embrace_family.mappers;
 
-import com.joaopem.embrace_family.dto.AdoptiveParentResponseDTO;
-import com.joaopem.embrace_family.dto.AdoptiveParentUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentResponseDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentUpdateRequestDTO;
 import com.joaopem.embrace_family.model.AdoptiveParent;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -13,5 +13,8 @@ public interface AdoptiveParentMapper {
 
     AdoptiveParentResponseDTO toDTO(AdoptiveParent adoptiveParent);
 
-    void updateFromDTO(@MappingTarget AdoptiveParent adoptiveParent, AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO);
+    void updateAdoptiveParentFromDTO(
+            AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO, @MappingTarget AdoptiveParent adoptiveParent
+    );
+    //void updateFromDTO(@MappingTarget AdoptiveParent adoptiveParent, AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO);
 }

@@ -41,6 +41,15 @@ public class UserAccountService {
         return userAccountMapper.toDTO(userAccount);
     }
 
+//    public UserAccount createUserAccount(UserAccount userAccount){
+//        userAccount.setEmail(userAccount.getEmail().toLowerCase());
+//        userAccountValidator.validateUserAccount(userAccount);
+//        userAccount.setUserRole(UserRole.ADOPTIVE_PARENT);
+//        userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
+//        createAdoptiveParent(userAccount);
+//        return userAccountRepository.save(userAccount);
+//    }
+
     private void createAdoptiveParent(UserAccount userAccount) {
         AdoptiveParent adoptiveParent = new AdoptiveParent();
         adoptiveParent.setUserAccount(userAccount);

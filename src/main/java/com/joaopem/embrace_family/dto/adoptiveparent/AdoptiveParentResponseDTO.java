@@ -1,4 +1,4 @@
-package com.joaopem.embrace_family.dto;
+package com.joaopem.embrace_family.dto.adoptiveparent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

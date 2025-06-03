@@ -1,8 +1,9 @@
 package com.joaopem.embrace_family.controller;
 
-import com.joaopem.embrace_family.dto.AdoptiveParentResponseDTO;
-import com.joaopem.embrace_family.dto.AdoptiveParentUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentResponseDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentUpdateRequestDTO;
 import com.joaopem.embrace_family.mappers.AdoptiveParentMapper;
+import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.service.AdoptiveParentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,19 @@ public class AdoptiveParentController {
     private final AdoptiveParentService adoptiveParentService;
     private final AdoptiveParentMapper adoptiveParentMapper;
 
-    @PutMapping(value = "/update-me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateAdoptiveParent(
-            @RequestPart("data") @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files
-            ) throws IOException {
-        adoptiveParentService.updateAdoptiveParent(adoptiveParentUpdateRequestDTO, files);
-        return ResponseEntity.noContent().build();
+//    @PutMapping(value = "/update-me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<Void> updateAdoptiveParent(
+//            @RequestPart("adoptiveParentDTO") @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO,
+//            @RequestPart(value = "files", required = false) List<MultipartFile> files
+//            ) throws IOException {
+//        adoptiveParentService.updateAdoptiveParent(adoptiveParentUpdateRequestDTO, files);
+//        return ResponseEntity.noContent().build();
+//    }
+
+    @PutMapping("/update-me")
+    public ResponseEntity<AdoptiveParentResponseDTO> updateOwnAdoptiveParent(@RequestBody @Valid AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
+        AdoptiveParentResponseDTO adoptiveParentResponseDTO = adoptiveParentService.updateOwnAdoptiveParent(adoptiveParentUpdateRequestDTO);
+        return ResponseEntity.ok().body(adoptiveParentResponseDTO);
     }
 
    @GetMapping("/show-me")

@@ -1,7 +1,7 @@
 package com.joaopem.embrace_family.service;
 
-import com.joaopem.embrace_family.dto.AdoptiveParentResponseDTO;
-import com.joaopem.embrace_family.dto.AdoptiveParentUpdateRequestDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentResponseDTO;
+import com.joaopem.embrace_family.dto.adoptiveparent.AdoptiveParentUpdateRequestDTO;
 import com.joaopem.embrace_family.mappers.AdoptiveParentMapper;
 import com.joaopem.embrace_family.model.AdoptiveParent;
 import com.joaopem.embrace_family.model.UserAccount;
@@ -10,11 +10,8 @@ import com.joaopem.embrace_family.security.SecurityService;
 import com.joaopem.embrace_family.validator.AdoptiveParentValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +23,33 @@ public class AdoptiveParentService {
     private final SecurityService securityService;
     private final ImageService imageService;
 
-    public void updateAdoptiveParent(AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO, List<MultipartFile> files) throws IOException {
-        UserAccount userAccount = securityService.getLoggedInUser();
-        AdoptiveParent adoptiveParent = adoptiveParentRepository.findByUserAccountId(userAccount.getId())
-                .orElseThrow(() -> new EntityNotFoundException("AdoptiveParent not found"));
+//    public void updateAdoptiveParent(AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO, List<MultipartFile> files) throws IOException {
+//        UserAccount userAccount = securityService.getLoggedInUser();
+//        AdoptiveParent adoptiveParent = adoptiveParentRepository.findByUserAccountId(userAccount.getId())
+//                .orElseThrow(() -> new EntityNotFoundException("AdoptiveParent not found"));
+//
+//        adoptiveParentMapper.updateFromDTO(adoptiveParent, adoptiveParentUpdateRequestDTO);
+//        adoptiveParentValidator.validateAdoptiveParent(adoptiveParent);
+//
+//        if (files != null && !files.isEmpty()) {
+//            imageService.saveImagesForAdoptiveParent(adoptiveParent, files);
+//        }
+//
+//        adoptiveParentRepository.save(adoptiveParent);
+//    }
 
-        adoptiveParentMapper.updateFromDTO(adoptiveParent, adoptiveParentUpdateRequestDTO);
-        adoptiveParentValidator.validateAdoptiveParent(adoptiveParent);
+    public AdoptiveParentResponseDTO updateOwnAdoptiveParent(AdoptiveParentUpdateRequestDTO adoptiveParentUpdateRequestDTO){
+        UserAccount loggedUser = securityService.getLoggedInUser();
+        AdoptiveParent loggedAdoptiveParent = loggedUser.getAdoptiveParent();
 
-        if (files != null && !files.isEmpty()) {
-            imageService.saveImagesForAdoptiveParent(adoptiveParent, files);
+        if (loggedAdoptiveParent == null){
+            throw new AccessDeniedException("Logged user is not an adoptive parent.");
         }
 
-        adoptiveParentRepository.save(adoptiveParent);
+        adoptiveParentMapper.updateAdoptiveParentFromDTO(adoptiveParentUpdateRequestDTO, loggedAdoptiveParent);
+        adoptiveParentValidator.validateAdoptiveParent(loggedAdoptiveParent);
+        adoptiveParentRepository.save(loggedAdoptiveParent);
+        return adoptiveParentMapper.toDTO(loggedAdoptiveParent);
     }
 
     public AdoptiveParentResponseDTO getAdoptiveParentDetails(){

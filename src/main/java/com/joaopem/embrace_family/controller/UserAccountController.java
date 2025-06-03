@@ -27,6 +27,12 @@ public class UserAccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserAccountDTO);
     }
 
+//    public ResponseEntity<UserAccountResponseDTO> createUserAccount(@RequestBody @Valid UserAccountPostRequestDTO userAccountPostRequestDTO){
+//        UserAccount userAccount = userAccountMapper.toEntity(userAccountPostRequestDTO);
+//        UserAccount createdUser = userAccountService.createUserAccount(userAccount);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(userAccountMapper.toDTO(createdUser));
+//    }
+
     @PatchMapping("/update-me")
     public ResponseEntity<UserAccountResponseDTO> updateOwnUserAccount(@RequestBody @Valid UserAccountUpdateRequestDTO userAccountUpdateRequestDTO){
         UserAccountResponseDTO updatedUserAccountDTO = userAccountService.updateOwnUserAccount(userAccountUpdateRequestDTO);

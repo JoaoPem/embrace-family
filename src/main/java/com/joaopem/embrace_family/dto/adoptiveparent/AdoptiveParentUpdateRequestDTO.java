@@ -1,14 +1,14 @@
-package com.joaopem.embrace_family.dto;
+package com.joaopem.embrace_family.dto.adoptiveparent;
 
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record AdoptiveParentUpdateRequestDTO(
 
         @NotBlank(message = "required field")
+        @Size(max = 100)
         String fullName,
 
         @Past
@@ -20,21 +20,27 @@ public record AdoptiveParentUpdateRequestDTO(
         String phone,
 
         @NotBlank(message = "required field")
+        @Size(max = 30)
         String nationality,
 
         @NotBlank(message = "required field")
+        @Size(max = 20)
         String maritalStatus,
 
         @NotBlank(message = "required field")
+        @Size(max = 20)
         String genderIdentify,
 
         @NotBlank(message = "required field")
+        @Size(max = 20)
         String sexualOrientation,
 
         @NotBlank(message = "required field")
+        @Size(max = 30)
         String educationLevel,
 
         @NotBlank(message = "required field")
+        @Size(max = 50)
         String occupation,
 
         @Positive
@@ -42,9 +48,11 @@ public record AdoptiveParentUpdateRequestDTO(
         BigDecimal monthlyIncome,
 
         @NotBlank(message = "required field")
+        @Size(max = 1000)
         String hobbies,
 
         @NotBlank(message = "required field")
+        @Size(max = 20)
         String religion
 ) {
 }
