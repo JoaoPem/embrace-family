@@ -17,13 +17,13 @@ public class UserAccountValidator {
     }
 
     private void validateEmailUniqueness(UserAccount userAccount){
-        boolean existingEmail =  userAccountRepository.findByEmail(userAccount.getEmail()).filter(
-                existing -> existing.getId().equals(userAccount.getId())
-        ).isPresent();
+        boolean emailTaken = userAccountRepository.findByEmail(userAccount.getEmail())
+                .isPresent();
 
-        if (existingEmail){
+        if (emailTaken) {
             throw new DuplicateRecordException("The email has already been taken");
         }
+
 
     }
 

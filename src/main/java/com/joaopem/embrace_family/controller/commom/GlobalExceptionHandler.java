@@ -41,6 +41,12 @@ public class GlobalExceptionHandler {
         return ResponseError.invalidEnumValue(errorMessage);
     }
 
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ResponseError handleIllegalArgumentException(IllegalArgumentException e) {
+//        return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Validation Failed", List.of());
+//    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleIllegalArgumentException(IllegalArgumentException e) {

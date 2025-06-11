@@ -11,7 +11,16 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "family_invitations")
+@Table(
+    name = "family_invitations",
+    uniqueConstraints = {
+            @UniqueConstraint(columnNames = {
+                    "inviter_adoptive_parent_id",
+                    "invited_adoptive_parent_id",
+                    "family_id"
+            })
+    }
+)
 @Data
 @EntityListeners(AuditingEntityListener.class)
 public class FamilyInvitation {
@@ -20,20 +29,20 @@ public class FamilyInvitation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "invited_adoptive_parent_id", nullable = false)
     private AdoptiveParent invitedAdoptiveParent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "inviter_adoptive_parent_id", nullable = false)
     private AdoptiveParent inviterAdoptiveParent;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "family_id", nullable = false)
     private Family family;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status",nullable = false)
     private InvitationStatus status = InvitationStatus.PENDING;
 
     @CreatedDate

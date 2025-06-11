@@ -65,5 +65,5 @@ CREATE TABLE family_invitations(
     CONSTRAINT fk_invited_adoptive_parent FOREIGN KEY (invited_adoptive_parent_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_inviter_adoptive_parent FOREIGN KEY (inviter_adoptive_parent_id) REFERENCES adoptive_parents(id),
     CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES families(id),
-    CONSTRAINT unique_invitation UNIQUE (inviter_id, invitee_id, family_id)
+    CONSTRAINT unique_invitation UNIQUE (inviter_adoptive_parent_id, invited_adoptive_parent_id, family_id)
 );

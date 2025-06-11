@@ -54,15 +54,4 @@ public class FamilyController {
 //        return ResponseEntity.ok(family);
 //    }
 
-//    @PostMapping("/invite")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void inviteAdoptiveParent(@RequestBody FamilyInvitationRequestDTO familyInvitationRequestDTO){
-//        familyService.inviteAdoptiveParent(familyInvitationRequestDTO);
-//    }
-//
-//    @DeleteMapping("/invite/{uuid}")
-//    public ResponseEntity<Void> cancelInvitation(@PathVariable UUID uuid){
-//        familyInvitationService.cancelInvitation(uuid);
-//        return ResponseEntity.noContent().build();
-//    }
 }
